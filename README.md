@@ -18,6 +18,5 @@ This is a web application that generates QR codes from user-provided text or lin
 - HTML
 - CSS
 - JavaScript
-- QR code generation library ([qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator))
 
 ## Project Link : https://shozon-roy.github.io/qr-code-genaretor/
