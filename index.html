@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate QR Code</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #f8f9fa;
+      font-family: Arial, sans-serif;
+    }
+    .generate-container {
+      text-align: center;
+      animation: fadeInUp 0.5s ease forwards;
+    }
+    .generate-input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+      font-size: 16px;
+      width: 300px; /* Adjust width as needed */
+      margin-bottom: 20px;
+    }
+    .generate-button {
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .generate-button:hover {
+      background-color: #0056b3;
+    }
+    #qrContainer {
+      margin-top: 20px;
+      border: 2px solid #007bff;
+      border-radius: 5px;
+      padding: 20px;
+      background-color: #fff;
+      animation: fadeIn 0.5s ease forwards;
+    }
+    #downloadButton {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      background-color: #28a745;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      animation: fadeInDown 0.5s ease forwards;
+    }
+    #downloadButton:hover {
+      background-color: #218838;
+    }
+    .social-icons {
+      margin-top: 40px;
+    }
+    .social-icons a {
+      margin: 0 10px;
+      color: #007bff;
+      font-size: 24px;
+      transition: color 0.3s;
+    }
+    .social-icons a:hover {
+      color: #0056b3;
+    }
+
+    /* Animation Keyframes */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="generate-container">
+    <input type="text" class="generate-input" id="inputText" placeholder="Enter text or link...">
+    <button class="generate-button" onclick="generateQRCode()">Generate</button>
+    <div id="qrContainer"></div>
+    <button id="downloadButton" style="display: none;" onclick="downloadQRCode()">Download QR Code</button>
+    <div class="social-icons">
+      <a href="https://www.facebook.com/shozon.roy2"><i class="fab fa-facebook"></i></a>
+      <a href="https://www.instagram.com/shozon_roy"><i class="fab fa-instagram"></i></a>
+      <a href="https://t.me/shozonroy2"><i class="fab fa-telegram"></i></a>
+      <a href="https://github.com/Shozon-Roy"><i class="fab fa-github"></i></a>
+    </div>
+  </div>
+
+  <!-- QR Code Generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+  <script>
+    function generateQRCode() {
+      var text = document.getElementById("inputText").value.trim();
+      if (text !== '') {
+        var qr = qrcode(0, 'M');
+        qr.addData(text);
+        qr.make();
+        var canvas = qr.createImgTag(10, 0);
+        canvas.onload = function() {
+          var ctx = canvas.getContext('2d');
+          ctx.strokeStyle = '#fff'; // Set border or stroke color
+          ctx.lineWidth = 3; // Set border or stroke width
+          ctx.strokeRect(0, 0, canvas.width, canvas.height);
+        };
+        document.getElementById("qrContainer").innerHTML = canvas;
+        document.getElementById("downloadButton").style.display = "block";
+      } else {
+        alert("Please enter text or link");
+      }
+    }
+
+    function downloadQRCode() {
+      var qrCodeImage = document.getElementById("qrContainer").getElementsByTagName("img")[0];
+      
+      // Create a new canvas
+      var canvas = document.createElement('canvas');
+      canvas.width = qrCodeImage.width;
+      canvas.height = qrCodeImage.height;
+      var ctx = canvas.getContext('2d');
+      
+      // Draw the QR code image onto the canvas
+      ctx.drawImage(qrCodeImage, 0, 0);
+      
+      // Draw border or stroke on the canvas
+      ctx.strokeStyle = '#fff'; // Set border or stroke color
+      ctx.lineWidth = 3; // Set border or stroke width
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+
+      // Convert the canvas to a data URL and download it
+      var downloadLink = document.createElement("a");
+      downloadLink.href = canvas.toDataURL('image/png');
+      downloadLink.download = "qrcode.png";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+  </script>
+</body>
+</html>
